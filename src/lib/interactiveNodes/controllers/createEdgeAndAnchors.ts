@@ -48,7 +48,8 @@ export function createEdgeAndAnchors(
     true,
     false,
     () => {},
-    ''
+    '',
+    '',
   );
 
   // create source anchor

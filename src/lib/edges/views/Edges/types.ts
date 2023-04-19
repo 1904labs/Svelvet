@@ -23,6 +23,7 @@ export interface Edge {
   source: number;
   target: number;
   label?: string;
+  hoverLabel?: string;
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;
@@ -49,10 +50,12 @@ export interface EdgeProps extends DerivedEdge {
 
 export interface EdgeTextProps {
   label?: any;
+  hoverLabel?: string;
   labelBgColor?: string;
   labelTextColor?: string;
   centerX: number;
   centerY: number;
+  displayHover: boolean;
 }
 
 export type HandleType = 'source' | 'target';
