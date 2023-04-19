@@ -1,31 +1,32 @@
 <script lang="ts">
-  import { afterUpdate, onMount } from 'svelte';
-  import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
-  import { select, selectAll, pointer, local } from 'd3-selection';
-  import SimpleBezierEdge from '../../edges/views/Edges/SimpleBezierEdge.svelte';
-  import StepEdge from '../../edges/views/Edges/StepEdge.svelte';
-  import SmoothStepEdge from '../../edges/views/Edges/SmoothStepEdge.svelte';
-  import StraightEdge from '../../edges/views/Edges/StraightEdge.svelte';
+  import { afterUpdate, onMount } from "svelte";
+  import { zoom, zoomTransform, zoomIdentity } from "d3-zoom";
+  import { select, selectAll, pointer, local } from "d3-selection";
+  import SimpleBezierEdge from "../../edges/views/Edges/SimpleBezierEdge.svelte";
+  import StepEdge from "../../edges/views/Edges/StepEdge.svelte";
+  import SmoothStepEdge from "../../edges/views/Edges/SmoothStepEdge.svelte";
+  import StraightEdge from "../../edges/views/Edges/StraightEdge.svelte";
   import type {
     EdgeType,
     NodeType,
     ResizeNodeType,
-  } from '../../store/types/types';
-  import EdgeAnchor from '../../edges/views/Edges/EdgeAnchor.svelte';
-  import ResizeNode from '../../resizableNodes/views/ResizeNode.svelte';
-  import Node from '../../nodes/views/Node.svelte';
+  } from "../../store/types/types";
+  import EdgeAnchor from "../../edges/views/Edges/EdgeAnchor.svelte";
+  import ResizeNode from "../../resizableNodes/views/ResizeNode.svelte";
+  import Node from "../../nodes/views/Node.svelte";
 
-  import { findStore } from '../../store/controllers/storeApi';
-  import PotentialAnchor from '../../interactiveNodes/views/PotentialAnchor.svelte';
-  import TemporaryEdge from '../../interactiveNodes/views/TemporaryEdge.svelte';
-  import { determineD3Instance, zoomInit } from '../..//d3/controllers/d3';
+  import { findStore } from "../../store/controllers/storeApi";
+  import PotentialAnchor from "../../interactiveNodes/views/PotentialAnchor.svelte";
+  import TemporaryEdge from "../../interactiveNodes/views/TemporaryEdge.svelte";
+  import { determineD3Instance, zoomInit } from "../..//d3/controllers/d3";
 
-  import MinimapBoundary from '../../Minimap/MinimapBoundary.svelte';
-  import MinimapBoundless from '../../Minimap//MinimapBoundless.svelte';
-  import EditNode from '../../nodes/views/EditNode.svelte';
-  import EditEdge from '../../editEdges/views/EditEdge.svelte';
-  import { filterByCollapsible } from '../../collapsible/controllers/util';
-  import type { AnchorType } from '../../edges/types/types';
+  import MinimapBoundary from "../../Minimap/MinimapBoundary.svelte";
+  import MinimapBoundless from "../../Minimap//MinimapBoundless.svelte";
+  import EditNode from "../../nodes/views/EditNode.svelte";
+  import EditEdge from "../../editEdges/views/EditEdge.svelte";
+  import { filterByCollapsible } from "../../collapsible/controllers/util";
+  import type { AnchorType } from "../../edges/types/types";
+  import { createEventDispatcher } from "svelte";
 
   //these are typscripted as any, however they have been transformed inside of store.ts
   export let canvasId: string;
@@ -35,6 +36,9 @@
   export let initialLocation;
   export let boundary = false;
   export let minimap = false;
+
+  const dispatch = createEventDispatcher();
+
   // here we lookup the store using the unique key
   const store = findStore(canvasId);
   const {
@@ -59,6 +63,16 @@
   $: resizeNodes = Object.values($resizeNodesStore);
   $: potentialAnchors = Object.values($potentialAnchorsStore);
   $: tempEdges = $temporaryEdgeStore;
+  $: onNodesUpdated($nodesStore);
+  $: onEdgesUpdated($edgesStore);
+
+  const onNodesUpdated = (newNodes) => {
+    dispatch("nodesUpdated", newNodes);
+  };
+
+  const onEdgesUpdated = (newEdges) => {
+    dispatch("edgesUpdated", newEdges);
+  };
 
   /*
     This block of code is responsible for reactivity of the collapsible feature
@@ -72,10 +86,10 @@
   $: {
     const tmp = $collapsibleStore; // assignment is necessary for reactivity
     const obj = filterByCollapsible(store, nodes, resizeNodes, anchors, edges);
-    filteredNodes = obj['filteredNodes'];
-    filteredEdges = obj['filteredEdges'];
-    filteredResizeNodes = obj['filteredResizeNodes'];
-    filteredAnchors = obj['filteredAnchors'];
+    filteredNodes = obj["filteredNodes"];
+    filteredEdges = obj["filteredEdges"];
+    filteredResizeNodes = obj["filteredResizeNodes"];
+    filteredAnchors = obj["filteredAnchors"];
   }
 
   // declaring the grid and dot size for d3's transformations and zoom
@@ -113,7 +127,7 @@
     d3.select(`.Edges-${canvasId}`).call(d3Zoom);
     d3.select(`.Nodes-${canvasId}`).call(d3Zoom);
     d3.select(`#background-${canvasId}`).call(d3Zoom);
-    d3.selectAll('#dot').call(d3Zoom); // TODO: this should be a class, not an ID
+    d3.selectAll("#dot").call(d3Zoom); // TODO: this should be a class, not an ID
     d3Translate = zoomInit(
       d3,
       canvasId,
@@ -189,17 +203,17 @@
     // should not run d3.select below if backgroundStore is false
     if (backgroundStore) {
       d3.select(`#background-${canvasId}`)
-        .attr('x', e.transform.x)
-        .attr('y', e.transform.y)
-        .attr('width', gridSize * e.transform.k)
-        .attr('height', gridSize * e.transform.k)
-        .selectAll('#dot')
-        .attr('x', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('y', (gridSize * e.transform.k) / 2 - dotSize / 2)
-        .attr('opacity', Math.min(e.transform.k, 1));
+        .attr("x", e.transform.x)
+        .attr("y", e.transform.y)
+        .attr("width", gridSize * e.transform.k)
+        .attr("height", gridSize * e.transform.k)
+        .selectAll("#dot")
+        .attr("x", (gridSize * e.transform.k) / 2 - dotSize / 2)
+        .attr("y", (gridSize * e.transform.k) / 2 - dotSize / 2)
+        .attr("opacity", Math.min(e.transform.k, 1));
     }
     // transform 'g' SVG elements (edge, edge text, edge anchor)
-    d3.select(`.Edges-${canvasId} g`).attr('transform', e.transform);
+    d3.select(`.Edges-${canvasId} g`).attr("transform", e.transform);
     // transform div elements (nodes)
     let transform = d3.zoomTransform(this);
     d3Translate = transform;
@@ -207,16 +221,16 @@
     // selects and transforms all node divs from class 'Node' and performs transformation
     d3.select(`.Node-${canvasId}`)
       .style(
-        'transform',
-        'translate(' +
+        "transform",
+        "translate(" +
           transform.x +
-          'px,' +
+          "px," +
           transform.y +
-          'px) scale(' +
+          "px) scale(" +
           transform.k +
-          ')'
+          ")"
       )
-      .style('transform-origin', '0 0');
+      .style("transform-origin", "0 0");
   }
 </script>
 
@@ -307,11 +321,11 @@
   <!-- <g> tag defines which edge type to render depending on properties of edge object -->
   <g>
     {#each filteredEdges as edge}
-      {#if edge.type === 'straight'}
+      {#if edge.type === "straight"}
         <StraightEdge edgeId={edge.id} {canvasId} />
-      {:else if edge.type === 'smoothstep'}
+      {:else if edge.type === "smoothstep"}
         <SmoothStepEdge {edge} {canvasId} />
-      {:else if edge.type === 'step'}
+      {:else if edge.type === "step"}
         <StepEdge {edge} {canvasId} />
       {:else}
         <SimpleBezierEdge edgeId={edge.id} {canvasId} />

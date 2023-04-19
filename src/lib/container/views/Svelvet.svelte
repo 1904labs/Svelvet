@@ -1,23 +1,23 @@
 <script lang="ts">
   const pkStringGenerator = () => (Math.random() + 1).toString(36).substring(7);
-  import type { UserEdgeType, UserNodeType } from '../../types/types';
+  import type { UserEdgeType, UserNodeType } from "../../types/types";
 
   import {
     createStoreEmpty,
     populateSvelvetStoreFromUserInput,
-  } from '../../store/controllers/storeApi';
-  import { afterUpdate, onMount } from 'svelte';
-  import GraphView from './GraphView.svelte';
+  } from "../../store/controllers/storeApi";
+  import { afterUpdate, onMount } from "svelte";
+  import GraphView from "./GraphView.svelte";
   import {
     sanitizeCanvasOptions,
     sanitizeUserNodesAndEdges,
-  } from '../controllers/middleware';
+  } from "../controllers/middleware";
 
-  import ImportExport from '../../importingExporting/views/ImportExport.svelte';
+  import ImportExport from "../../importingExporting/views/ImportExport.svelte";
 
   export let nodes: UserNodeType[]; // TODO: update type to make possible user id being a number
   export let edges: UserEdgeType[]; // TODO: update type to make possible user id being a number
-  export let bgColor = '#ffffff'; // this is used to set the background color of the the Svelvet canvas
+  export let bgColor = "#ffffff"; // this is used to set the background color of the the Svelvet canvas
   export let minimap = false;
   export let width: number = 600;
   export let height: number = 600;
@@ -48,8 +48,8 @@
   onMount(() => {
     // sanitize user input
     let output = sanitizeUserNodesAndEdges(nodes, edges);
-    const userNodes = output['userNodes'];
-    const userEdges = output['userEdges'];
+    const userNodes = output["userNodes"];
+    const userEdges = output["userEdges"];
 
     // set canvas related stores. you need to do this before setting node/edge related stores because
     // initializing nodes/edges might read relevant options from the store.
@@ -77,8 +77,8 @@
   afterUpdate(() => {
     // sanitize user input
     let output = sanitizeUserNodesAndEdges(nodes, edges);
-    const userNodes = output['userNodes'];
-    const userEdges = output['userEdges'];
+    const userNodes = output["userNodes"];
+    const userEdges = output["userEdges"];
 
     // set canvas related stores. you need to do this before setting node/edge related stores because
     // initializing nodes/edges might read relevant options from the store.
@@ -116,6 +116,8 @@
     {initialZoom}
     {boundary}
     {minimap}
+    on:edgesUpdated
+    on:nodesUpdated
   />
   {#if shareable}
     <ImportExport {canvasId} />
@@ -127,6 +129,6 @@
     position: relative;
     overflow: hidden;
     display: grid;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: "Segoe UI", sans-serif;
   }
 </style>
