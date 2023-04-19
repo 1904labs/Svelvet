@@ -13,13 +13,14 @@ import { getAnchors, getAnchorFromEdge } from '../../edges/controllers/util';
  * @param targetY The Y coordinate of the target Anchor
  * @param canvasId The canvasId of the Svelvet component that holds the instantiated Edge
  * @param label The label of the Edge
+ * @param hoverLabel The label of the Edge displayed on hover
  * @param type The type of the Edge (options: 'straight', 'smoothstep', 'step', or 'bezier'). If user doesn't specify, the type will default to 'bezier'.
  * @param labelBgColor The background color of the Edge label
  * @param labelTextColor The text color of the Edge label
  * @param edgeColor The color of the Edge
  * @param animate Boolean value to specify whether the Edge should be animated
  * @param noHandle Boolean value but looks like it is already depracated and can be removed without damage
- * @param arraw Boolean value to specify whether the Edge displays an arrow near its target Anchor
+ * @param arrow Boolean value to specify whether the Edge displays an arrow near its target Anchor
  */
 export class Edge implements EdgeType {
   constructor(
@@ -38,7 +39,8 @@ export class Edge implements EdgeType {
     public noHandle: boolean,
     public arrow: boolean,
     public clickCallback: Function,
-    public className: string
+    public className: string,
+    public hoverLabel: string,
   ) {}
 
   /**
@@ -79,6 +81,7 @@ export class Edge implements EdgeType {
       arrow: this.arrow,
       source: 'dummy', // these will be set later
       target: 'dummy', // these will be set later
+      hoverLabel: this.hoverLabel,
     };
 
     // set source, target on exportableData

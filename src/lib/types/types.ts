@@ -24,6 +24,7 @@ export interface UserEdgeType {
   sourceAnchorCb?: Function;
   targetAnchorCb?: Function;
   label?: string;
+  hoverLabel?: string;
   labelBgColor?: string;
   labelTextColor?: string;
   edgeColor?: string;

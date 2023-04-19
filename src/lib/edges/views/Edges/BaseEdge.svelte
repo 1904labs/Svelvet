@@ -11,6 +11,7 @@
     path,
     animate,
     arrow,
+    hoverLabel,
     label,
     labelBgColor,
     labelTextColor,
@@ -19,13 +20,16 @@
     centerY,
   } = baseEdgeProps);
 
+  let displayHover = false;
   // setting edge text props
   $: edgeTextProps = {
+    hoverLabel: hoverLabel,
     label: label,
     labelBgColor: labelBgColor,
     labelTextColor: labelTextColor,
     centerX: centerX,
     centerY: centerY,
+    displayHover
   };
 
   // Click event handlers
@@ -51,6 +55,9 @@
     if (edge.clickCallback) edge.clickCallback(edge);
     console.log(edge.className);
   };
+  const handleHover = () => {
+    displayHover = !displayHover;
+  }
 
   const defaultArrow = `0 0, 9 4.5, 0 9`;
 </script>
@@ -81,6 +88,8 @@ highlights on hover -->
     on:contextmenu={handleRightClick}
     on:click={handleClick}
     on:keypress={() => {}}
+    on:mouseenter={handleHover}
+    on:mouseleave={handleHover}
   />
 {/if}
 
@@ -103,7 +112,7 @@ highlights on hover -->
   />
 {/if}
 
-{#if edgeTextProps.label}
+{#if edgeTextProps.label || (edgeTextProps.hoverLabel && displayHover)}
   <EdgeText {edgeTextProps} />
 {/if}
 

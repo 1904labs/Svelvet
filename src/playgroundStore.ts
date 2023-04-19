@@ -24,6 +24,7 @@ export interface EdgeProps {
   source: Writable<number>;
   target: Writable<number>;
   edgeLabel: Writable<string>;
+  hoverLabel: Writable<string>;
   animate: Writable<boolean>;
   arrow: Writable<boolean>;
   edgeColor: Writable<string>;
@@ -56,6 +57,7 @@ export const edgeProps: EdgeProps = {
   source: writable(6),
   target: writable(7),
   edgeLabel: writable('New Edge Label'),
+  hoverLabel: writable('New Hover Label'),
   animate: writable(true),
   arrow: writable(true),
   edgeColor: writable('#F87171'),
@@ -87,6 +89,7 @@ export let id = edgeProps.id;
 export let source = edgeProps.source;
 export let target = edgeProps.target;
 export let edgeLabel = edgeProps.edgeLabel;
+export let hoverLabel = edgeProps.hoverLabel;
 export let animate = edgeProps.animate;
 export let arrow = edgeProps.arrow;
 export let edgeColor = edgeProps.edgeColor;

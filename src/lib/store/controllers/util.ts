@@ -133,6 +133,7 @@ export function populateEdgesStore(
       arrow,
       clickCallback,
       className,
+      hoverLabel
     } = userEdge;
 
     const anchors = getAnchors(store, { edgeId: edgeId });
@@ -168,7 +169,8 @@ export function populateEdgesStore(
       userEdge.noHandle === undefined ? false : userEdge.noHandle,
       userEdge.arrow === undefined ? false : userEdge.arrow,
       userEdge.clickCallback === undefined ? () => {} : userEdge.clickCallback,
-      userEdge.className === undefined ? '' : userEdge.className
+      userEdge.className === undefined ? '' : userEdge.className,
+      userEdge.hoverLabel === undefined ? '' : userEdge.hoverLabel,
     );
   }
   store.edgesStore.set(edgesStore);

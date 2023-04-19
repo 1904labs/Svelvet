@@ -101,7 +101,8 @@ export function createNode(
     true,
     false,
     () => {},
-    ''
+    '',
+    '',
   );
 
   // create source anchor

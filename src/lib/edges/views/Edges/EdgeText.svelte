@@ -3,7 +3,7 @@
 
   // destructuring props to pass into BaseEdge component
   export let edgeTextProps: EdgeTextProps;
-  $: ({ label, labelBgColor, labelTextColor, centerX, centerY } =
+  $: ({ label, labelBgColor, labelTextColor, centerX, centerY, hoverLabel, displayHover } =
     edgeTextProps);
 
   const shiftRectY: number = 7;
@@ -17,11 +17,11 @@
   // pxRatio is an estimate of how many pixels 1 character might take up
   // pxRatio not 100% accurate as font is not monospace
   $: spaces = label.split(' ').length - 1;
-  $: newLength = label.length - spaces;
+  $: newLength = displayHover && hoverLabel ? hoverLabel.length - spaces : label.length - spaces;
   $: labelPx = newLength * pxRatio;
 </script>
 
-{#if typeof label === 'undefined' || !label}
+{#if (typeof label === 'undefined' || !label) && (typeof hoverLabel === 'undefined' || !hoverLabel)}
   {null}
 {:else}
   <g>
@@ -43,7 +43,7 @@
       text-anchor="middle"
       fill={labelTextColor ? labelTextColor : 'black'}
     >
-      {label}
+      {displayHover && hoverLabel ? hoverLabel : label}
     </text>
   </g>
 {/if}
