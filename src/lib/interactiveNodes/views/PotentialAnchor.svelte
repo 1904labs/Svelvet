@@ -1,18 +1,9 @@
 <script lang="ts">
-  import { findStore } from '../../store/controllers/storeApi';
-  import { TemporaryEdge } from '../models/TemporaryEdge';
-  import { writable, derived, get, readable } from 'svelte/store';
-  import { getPotentialAnchorById } from '../controllers/util';
-  import type {
-    NodeType,
-    EdgeType,
-    StoreType,
-    TemporaryEdgeType,
-    PotentialAnchorType,
-  } from '../../store/types/types';
-  import type { UserNodeType, UserEdgeType } from '../../types/types';
+  import { findStore } from "../../store/controllers/storeApi";
+  import { TemporaryEdge } from "../models/TemporaryEdge";
+  import { get } from "svelte/store";
+  import { getPotentialAnchorById } from "../controllers/util";
 
-  import { beforeUpdate, afterUpdate } from 'svelte';
   export let canvasId;
   export let x;
   export let y;
@@ -21,14 +12,10 @@
   const store = findStore(canvasId);
   const potentialAnchor = getPotentialAnchorById(store, potentialAnchorId);
 
-  let newEdge;
-  let hovered = false;
   let anchorWidth = 8;
   let anchorHeight = 8;
 
   const { temporaryEdgeStore } = findStore(canvasId);
-  let moving = false;
-  let moved = false;
   let isDragging = false;
 
   $: mouseX = x;
@@ -79,10 +66,6 @@
       get(temporaryEdgeStore)[0].targetPotentialAnchorId === null
     ) {
       temporaryEdgeStore.update((edges) => {
-        for (let edge of edges) {
-          // note length 1, refactor store to single tempEdge instead of arr of tempEdge
-          edge.createNode();
-        }
         return [];
       });
     }
@@ -134,8 +117,8 @@
           mouseX,
           mouseY,
           canvasId,
-          'straight',
-          'black'
+          "straight",
+          "black"
         );
         return [newTempEdge];
       } else {
