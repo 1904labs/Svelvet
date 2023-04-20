@@ -90,6 +90,6 @@
     "yootils": "^0.3.1"
   },
   "publishConfig": {
-    "@1904labs:registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   }
 }
